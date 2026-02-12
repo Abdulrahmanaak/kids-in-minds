@@ -13,7 +13,7 @@ export async function importChannelVideos(channelId: string) {
   const channelData = await getChannelDetails([channelId]);
   await trackQuota("channels.list");
 
-  const channel = channelData.items[0];
+  const channel = channelData.items?.[0];
   if (!channel) throw new Error(`Channel ${channelId} not found`);
 
   const uploadsPlaylistId = channel.contentDetails?.relatedPlaylists.uploads;
@@ -60,8 +60,9 @@ export async function importChannelVideos(channelId: string) {
     );
     await trackQuota("playlistItems.list");
 
-    for (const item of playlistData.items) {
-      videoIds.push(item.snippet.resourceId.videoId);
+    for (const item of playlistData.items ?? []) {
+      const vid = item.snippet?.resourceId?.videoId;
+      if (vid) videoIds.push(vid);
     }
 
     pageToken = playlistData.nextPageToken;
@@ -91,7 +92,7 @@ export async function importChannelVideos(channelId: string) {
           title: video.snippet.title,
           description: video.snippet.description?.slice(0, 2000),
           publishedAt: new Date(video.snippet.publishedAt),
-          durationSec: video.contentDetails
+          durationSec: video.contentDetails?.duration
             ? parseDuration(video.contentDetails.duration)
             : null,
           thumbnails: video.snippet.thumbnails,

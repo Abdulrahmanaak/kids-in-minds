@@ -9,34 +9,34 @@ const prisma = new PrismaClient({ adapter });
 
 const SEED_CHANNELS = [
   {
-    youtubeChannelId: "UCq-Fj5jknLsUf-MWSy4_brA",
-    name: "Team Falcon",
-    nameAr: "فريق الصقور",
+    youtubeChannelId: "UC8tgxAxKG7vYG6F7FoZVi4A",
+    name: "Falcons",
+    nameAr: "فالكونز",
     teamTag: "falcons",
   },
   {
-    youtubeChannelId: "UC2Qw1dzXDBAZPwS7zm37g8g",
-    name: "Power Team",
-    nameAr: "فريق القوة",
+    youtubeChannelId: "UCm6dEXyAMIy0njEOW-suLww",
+    name: "POWR eSports",
+    nameAr: "باور",
     teamTag: "power",
   },
   {
-    youtubeChannelId: "UCkLO4oelRG2o4GRefd1Toew",
-    name: "Team Lynx",
-    nameAr: "فريق الوشق",
+    youtubeChannelId: "UCf-YhOHjRunKHY3wxLove_w",
+    name: "Peaks",
+    nameAr: "بيكس",
+    teamTag: "peaks",
+  },
+  {
+    youtubeChannelId: "UCoDdwMx_GBfjbK3x-kw5iUA",
+    name: "Lynx",
+    nameAr: "لينكس",
     teamTag: "lynx",
   },
   {
-    youtubeChannelId: "UCLXhHzRIQbg2ygEiSaKmr2g",
-    name: "Al-Batabit",
-    nameAr: "البتابت",
+    youtubeChannelId: "UC48YH6lbbscWDsyoKqgg9Aw",
+    name: "ALBatabet",
+    nameAr: "البتابيت",
     teamTag: "batabit",
-  },
-  {
-    youtubeChannelId: "UCx9bOEKNIj3JMHX99-bfOtA",
-    name: "Paksx",
-    nameAr: "باكس",
-    teamTag: "paksx",
   },
 ];
 

@@ -58,7 +58,7 @@ export async function resolveVideo(urlOrId: string) {
       title: video.snippet.title,
       description: video.snippet.description?.slice(0, 2000),
       publishedAt: new Date(video.snippet.publishedAt),
-      durationSec: video.contentDetails
+      durationSec: video.contentDetails?.duration
         ? parseDuration(video.contentDetails.duration)
         : null,
       thumbnails: video.snippet.thumbnails,
