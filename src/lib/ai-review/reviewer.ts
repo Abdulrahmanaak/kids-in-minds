@@ -3,6 +3,7 @@ import { computeAgeRating, computeConfidence, validateScores } from "@/lib/ratin
 import type { AxisScores } from "@/lib/rating/engine";
 import type { Prisma } from "@/generated/prisma/client";
 import { extractAudio } from "./audio-extractor";
+import { fetchTranscript, type TranscriptSegment } from "./transcript";
 import { buildReviewPrompt } from "./prompt";
 import { callGeminiWithAudio, callGeminiTextOnly } from "./gemini-client";
 import { waitForRateLimit, recordRequest } from "./rate-limiter";
@@ -49,6 +50,22 @@ export async function reviewVideo(videoDbId: string): Promise<ReviewResult> {
   }
 
   const hasAudio = audioBuffer !== null;
+
+  // Fetch transcript (non-blocking — failure is ok)
+  let transcriptSegments: TranscriptSegment[] = [];
+  let transcriptLanguage: string | null = null;
+  try {
+    console.log(`[AI Review] Fetching transcript for ${video.youtubeVideoId}...`);
+    const transcript = await fetchTranscript(video.youtubeVideoId);
+    transcriptSegments = transcript.segments;
+    transcriptLanguage = transcript.language;
+    console.log(`[AI Review] Transcript: ${transcriptSegments.length} segments, lang: ${transcriptLanguage ?? "unknown"}`);
+  } catch (error) {
+    console.warn(
+      `[AI Review] Transcript fetch failed for ${video.youtubeVideoId}:`,
+      error instanceof Error ? error.message : error
+    );
+  }
 
   // Build prompt
   const prompt = buildReviewPrompt({
@@ -100,6 +117,9 @@ export async function reviewVideo(videoDbId: string): Promise<ReviewResult> {
           audioSizeBytes: audioSizeBytes,
           audioDurationSec: audioDurationSec,
           audioMimeType: hasAudio ? audioMimeType : null,
+          summary: geminiResult.summary,
+          transcript: transcriptSegments.length > 0 ? transcriptSegments : null,
+          transcriptLanguage,
         },
         evidence: {
           create: evidenceItems,

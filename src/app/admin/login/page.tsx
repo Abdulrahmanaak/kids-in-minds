@@ -7,10 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { createClient } from "@/lib/supabase/client";
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,20 +20,24 @@ export default function AdminLoginPage() {
     setError("");
     setLoading(true);
 
-    const supabase = createClient();
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
 
-    if (authError) {
-      setError("بيانات الدخول غير صحيحة");
-      setLoading(false);
-      return;
+      if (data.success) {
+        router.push("/admin");
+        router.refresh();
+      } else {
+        setError(data.error || "بيانات الدخول غير صحيحة");
+      }
+    } catch {
+      setError("خطأ في الاتصال");
     }
-
-    router.push("/admin");
-    router.refresh();
+    setLoading(false);
   }
 
   return (
@@ -47,14 +50,15 @@ export default function AdminLoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">البريد الإلكتروني</Label>
+              <Label htmlFor="username">اسم المستخدم</Label>
               <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
                 dir="ltr"
+                autoComplete="username"
               />
             </div>
             <div className="space-y-2">
@@ -66,6 +70,7 @@ export default function AdminLoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 dir="ltr"
+                autoComplete="current-password"
               />
             </div>
             {error && <p className="text-sm text-destructive">{error}</p>}

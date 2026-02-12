@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createClient } from "@/lib/supabase/server";
+import { isAuthenticated } from "@/lib/auth";
 import { ratingEntrySchema } from "@/lib/validators";
 import { computeAgeRating, computeConfidence, validateScores } from "@/lib/rating/engine";
 import type { AxisScores } from "@/lib/rating/engine";
@@ -41,9 +41,8 @@ export async function PUT(
   const { videoId } = await params;
 
   // Auth check
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
+  const authed = await isAuthenticated();
+  if (!authed) {
     return NextResponse.json({ success: false, error: "غير مصرح" }, { status: 401 });
   }
 

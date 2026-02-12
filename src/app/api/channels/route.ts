@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createClient } from "@/lib/supabase/server";
+import { isAuthenticated } from "@/lib/auth";
 import { channelImportSchema } from "@/lib/validators";
 
 export async function GET() {
@@ -13,9 +13,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
+  const authed = await isAuthenticated();
+  if (!authed) {
     return NextResponse.json({ success: false, error: "غير مصرح" }, { status: 401 });
   }
 

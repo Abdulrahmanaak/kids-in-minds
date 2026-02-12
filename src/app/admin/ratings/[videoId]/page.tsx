@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { VideoPlayer } from "@/components/video/video-player";
 import { RatingEntryForm } from "@/components/forms/rating-entry-form";
+import { AdminBreadcrumb } from "@/components/admin/admin-breadcrumb";
 import type { AxisKey } from "@/lib/rating/constants";
 import type { EvidenceItem } from "@/types/rating";
 
@@ -24,6 +25,15 @@ export default async function AdminRatingPage({ params }: Props) {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      <AdminBreadcrumb items={[
+        { label: "لوحة التحكم", href: "/admin" },
+        { label: "الفيديوهات", href: "/admin/videos" },
+        { label: video.title, href: `/admin/videos/${video.id}` },
+        { label: "تقييم يدوي" },
+      ]} />
+
+      <h1 className="text-xl font-bold">تقييم: {video.title}</h1>
+
       <VideoPlayer youtubeVideoId={video.youtubeVideoId} title={video.title} />
       <RatingEntryForm
         videoId={video.youtubeVideoId}

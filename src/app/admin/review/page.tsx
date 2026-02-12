@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AdminBreadcrumb } from "@/components/admin/admin-breadcrumb";
 import { ReviewActions } from "./review-actions";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +13,7 @@ export default async function AdminReviewPage() {
     include: {
       submission: true,
       report: {
-        include: { video: { select: { youtubeVideoId: true, title: true } } },
+        include: { video: { select: { id: true, youtubeVideoId: true, title: true } } },
       },
     },
   });
@@ -21,6 +23,11 @@ export default async function AdminReviewPage() {
 
   return (
     <div>
+      <AdminBreadcrumb items={[
+        { label: "لوحة التحكم", href: "/admin" },
+        { label: "المراجعة" },
+      ]} />
+
       <h1 className="text-2xl font-bold mb-6">
         قائمة المراجعة ({pending.length} بانتظار)
       </h1>
@@ -65,7 +72,16 @@ export default async function AdminReviewPage() {
                 <>
                   <p className="text-sm">
                     <span className="font-medium">الفيديو:</span>{" "}
-                    {item.report.video?.title ?? "غير معروف"}
+                    {item.report.video ? (
+                      <Link
+                        href={`/admin/videos/${item.report.video.id}`}
+                        className="text-primary hover:underline"
+                      >
+                        {item.report.video.title}
+                      </Link>
+                    ) : (
+                      "غير معروف"
+                    )}
                   </p>
                   <p className="text-sm">
                     <span className="font-medium">النوع:</span>{" "}
@@ -96,6 +112,17 @@ export default async function AdminReviewPage() {
                 <CardContent className="flex items-center justify-between py-3">
                   <span className="text-sm">
                     {item.itemType === "SUBMISSION" ? "طلب تقييم" : "بلاغ"}
+                    {item.report?.video && (
+                      <>
+                        {" · "}
+                        <Link
+                          href={`/admin/videos/${item.report.video.id}`}
+                          className="text-primary hover:underline"
+                        >
+                          {item.report.video.title}
+                        </Link>
+                      </>
+                    )}
                   </span>
                   <Badge>{item.status}</Badge>
                 </CardContent>

@@ -1,22 +1,19 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { isAuthenticated } from "@/lib/auth";
 import { reviewUnscannedVideos } from "@/lib/ai-review/reviewer";
 
 export const maxDuration = 3600; // 1 hour max for bulk processing
 
 export async function POST(request: Request) {
-  // Auth: admin user or cron secret
+  // Auth: admin session or cron secret
   const authHeader = request.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
 
   if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
     // Authorized via cron secret
   } else {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const authed = await isAuthenticated();
+    if (!authed) {
       return NextResponse.json(
         { success: false, error: "غير مصرح" },
         { status: 401 }

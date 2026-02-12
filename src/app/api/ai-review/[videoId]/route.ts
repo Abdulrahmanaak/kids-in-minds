@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { isAuthenticated } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { reviewVideo } from "@/lib/ai-review/reviewer";
 
@@ -9,18 +9,15 @@ export async function POST(
 ) {
   const { videoId } = await params;
 
-  // Auth: admin user or cron secret
+  // Auth: admin session or cron secret
   const authHeader = request.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
 
   if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
     // Authorized via cron secret
   } else {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
+    const authed = await isAuthenticated();
+    if (!authed) {
       return NextResponse.json(
         { success: false, error: "غير مصرح" },
         { status: 401 }

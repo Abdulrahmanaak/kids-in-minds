@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BulkAiReviewCard } from "@/components/admin/bulk-ai-review-button";
+import { AdminBreadcrumb } from "@/components/admin/admin-breadcrumb";
 
 type Channel = {
   id: string;
@@ -92,6 +93,11 @@ export default function AdminImportPage() {
 
   return (
     <div className="space-y-6">
+      <AdminBreadcrumb items={[
+        { label: "لوحة التحكم", href: "/admin" },
+        { label: "الاستيراد" },
+      ]} />
+
       <h1 className="text-2xl font-bold">استيراد الفيديوهات</h1>
 
       {/* Add channel form */}

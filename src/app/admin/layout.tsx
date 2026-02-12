@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { isAuthenticated } from "@/lib/auth";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 
 export default async function AdminLayout({
@@ -7,15 +7,10 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const authed = await isAuthenticated();
 
   // Allow the login page without auth
-  // The middleware handles redirects, but this is an extra safety check
-  if (!user) {
-    // Return children directly for the login page (middleware handles redirect)
+  if (!authed) {
     return <>{children}</>;
   }
 

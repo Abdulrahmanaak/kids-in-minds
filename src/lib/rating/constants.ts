@@ -24,6 +24,18 @@ export const AXIS_LABELS: Record<AxisKey, { ar: string; en: string }> = {
   sensitiveIdeas: { ar: "أفكار حساسة", en: "Sensitive Ideas" },
 };
 
+export const AXIS_COLORS: Record<AxisKey, { bg: string; text: string; border: string }> = {
+  profanity:       { bg: "bg-red-100",    text: "text-red-700",    border: "border-red-300" },
+  music:           { bg: "bg-purple-100", text: "text-purple-700", border: "border-purple-300" },
+  mixedGender:     { bg: "bg-pink-100",   text: "text-pink-700",   border: "border-pink-300" },
+  sexualInnuendo:  { bg: "bg-rose-100",   text: "text-rose-700",   border: "border-rose-300" },
+  drugs:           { bg: "bg-amber-100",  text: "text-amber-700",  border: "border-amber-300" },
+  violence:        { bg: "bg-orange-100", text: "text-orange-700", border: "border-orange-300" },
+  mockingReligion: { bg: "bg-indigo-100", text: "text-indigo-700", border: "border-indigo-300" },
+  gambling:        { bg: "bg-yellow-100", text: "text-yellow-700", border: "border-yellow-300" },
+  sensitiveIdeas:  { bg: "bg-teal-100",   text: "text-teal-700",   border: "border-teal-300" },
+};
+
 export const SCORE_LABELS: Record<number, { ar: string; en: string }> = {
   0: { ar: "لا يوجد", en: "None" },
   1: { ar: "نادر جداً", en: "Very Rare" },
