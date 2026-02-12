@@ -43,6 +43,7 @@ export function computeAgeRating(scores: AxisScores): AgeRating {
 
 export function computeConfidence(scansCount: number, clientType?: string): Confidence {
   if (clientType === "ADMIN_MANUAL") return "HIGH";
+  if (clientType === "AI_GEMINI") return "MEDIUM";
   if (scansCount >= 3) return "HIGH";
   if (scansCount >= 1) return "MEDIUM";
   return "LOW";

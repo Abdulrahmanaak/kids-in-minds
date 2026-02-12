@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { BulkAiReviewCard } from "@/components/admin/bulk-ai-review-button";
 
 type Channel = {
   id: string;
@@ -192,6 +193,9 @@ export default function AdminImportPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* AI Review */}
+      <BulkAiReviewCard />
 
       {/* Import results */}
       {results.length > 0 && (

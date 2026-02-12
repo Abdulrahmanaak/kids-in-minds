@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AgeRatingBadge } from "@/components/rating/age-rating-badge";
+import { AiReviewButton } from "@/components/admin/ai-review-button";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
 
 type Props = {
@@ -76,11 +77,14 @@ export default async function AdminVideosPage({ searchParams }: Props) {
                 </Badge>
               </TableCell>
               <TableCell>
-                <Button size="sm" variant="outline" asChild>
-                  <Link href={`/admin/ratings/${video.youtubeVideoId}`}>
-                    تقييم
-                  </Link>
-                </Button>
+                <div className="flex gap-1">
+                  <Button size="sm" variant="outline" asChild>
+                    <Link href={`/admin/ratings/${video.youtubeVideoId}`}>
+                      تقييم
+                    </Link>
+                  </Button>
+                  <AiReviewButton youtubeVideoId={video.youtubeVideoId} />
+                </div>
               </TableCell>
             </TableRow>
           ))}

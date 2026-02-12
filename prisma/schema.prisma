@@ -57,6 +57,7 @@ enum ClientType {
   ADMIN_MANUAL
   WEB_TAB_CAPTURE
   EXTENSION
+  AI_GEMINI
 }
 
 // ─── Models ─────────────────────────────────────────
